@@ -1,0 +1,92 @@
+{% load static%}
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title></title>
+	<link rel="stylesheet" href=
+"http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src=
+"https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js">
+	</script>
+	<script src=
+"http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js">
+	</script>
+	<script src=
+"https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.js">
+	</script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+    <script src="{% static 'js/jquery.imagemapster.js' %}"></script>
+</head>
+
+<body>
+        <div class="container-fluid">
+          <div class="row">
+            <div class="form-row">
+               <div class="form-group col-md-6">
+                 <label for="patient-id" class="col-sm-2 col-form-label"><b>Patient Id:</b></label>
+                 <input type="text" class="form-control col-sm-2" name="patient-id" id="patient-id" value="{{ patient_id }}">
+                </div>
+            </div>
+            </div>
+                <div class="row">
+                  <div class="col-sm-6"
+                  <div id="createImg" style="border: red solid 2px">
+                    <div class="text-center">
+                      <input type="text" hidden id="result1" name="L1" value="no">
+                    <img  src="{% static 'media/human.jpg' %}"  class="img-fluid img-thumbnail" alt="" usemap="#shape1" id="shape2">
+                    <map name="shape1">
+                      <area color="black" data-key="AZ" id="L1"` target="" alt="" title="" href="#"
+                      coords="42,239,44,247,46,254,46,263,49,271,47,278,41,280,35,279,32,270,29,264,29,253,33,243" shape="poly">
+                    </map>
+
+                    </div>
+                  </div>
+                  <button id="geeks" type="submit"class="btn btn-primary top">Create Image</button>
+                </div>
+                </div>
+        </div>
+	<script>
+		$(function() {
+			$("#geeks").click(function() {
+				html2canvas($("#createImg"), {
+					onrendered: function(canvas) {
+						var imgsrc = canvas.toDataURL("image/jpg");
+						console.log(imgsrc);
+						// $("#newimg").attr('src', imgsrc);
+						// $("#img").show();
+						var dataURL = canvas.toDataURL();
+						$.ajax({
+							type: "post",
+							url: "image/upload",
+							data: {
+								imgBase64: dataURL,
+                'csrfmiddlewaretoken': '{{ csrf_token }}',
+							}
+						}).done(function(o) {
+							console.log('saved');
+						});
+					}
+				});
+			});
+		});
+	</script>
+  <script>
+      $('#shape2').mapster({
+          fillColor: 'ff0000',
+
+  });
+      var out=[]
+      $("#L1").click(function () {
+          var result = document.querySelector('#result1');
+          if (result.value === 'no') {
+              result.value = 'yes';
+          } else {
+              result.value='no';
+          }
+          console.log("l1",result.value);
+  });
+  </script>
+</body>
+
+</html>

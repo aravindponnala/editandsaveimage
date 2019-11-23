@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hotel_image</title>
+</head>
+<body>
+    <form method = "post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Upload</button>
+        <p>
+        format, imgstr = image.split(';base64,')
+            ext = format.split('/')[-1]
+            data0 = ContentFile(base64.b64decode(imgstr), name='temp.' + ext)
+            z=imagemodel.file=data0
+            imagemodel.save()
+        </p>
+    </form>
+</body>
+</html>
+path('upload', views.uploadview, name = 'upload'),
+  path('image/upload',views.uploadimg,name ='uploadimage')
